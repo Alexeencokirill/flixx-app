@@ -66,7 +66,7 @@ function init() {
       displayPopularMovies();
       break;
 
-    case '/shows.html':
+    case './shows.html':
       console.log('Shows');
       break;
 
