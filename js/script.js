@@ -2,9 +2,11 @@ const global = {
   currentPage: window.location.pathname,
 };
 
+console.log(global)
+
 async function displayPopularMovies () {
     const {results} = await fetchAPIData('movie/popular');
-    // console.log(results)
+    console.log(results)
     
     results.forEach(movie => {
         const div = document.createElement('div');
@@ -61,8 +63,9 @@ function highlightActiveLink () {
 // Init App
 function init() {
   switch (global.currentPage) {
-    // case './':
-    case './index.html':
+    case '/':
+    case '/index.html':
+        console.log('Home')
       displayPopularMovies();
       break;
 
