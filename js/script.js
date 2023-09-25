@@ -61,8 +61,8 @@ function highlightActiveLink () {
 // Init App
 function init() {
   switch (global.currentPage) {
-    case '/':
-    case '/index.html':
+    case './':
+    case './index.html':
       displayPopularMovies();
       break;
 
@@ -70,15 +70,15 @@ function init() {
       console.log('Shows');
       break;
 
-    case '/movie-details.html':
+    case './movie-details.html':
       console.log('Movie  Details');
       break;
 
-    case '/tv-details.html':
+    case './tv-details.html':
       console.log('TV Details');
       break;
 
-    case '/search.html':
+    case './search.html':
       console.log('Search');
       break;
   }
