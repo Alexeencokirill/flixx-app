@@ -64,6 +64,7 @@ function highlightActiveLink () {
 function init() {
   switch (global.currentPage) {
     case '/flixx-app/':
+    case '/flixx-app/index.html':
     // case '/index.html':
         console.log('Home')
       displayPopularMovies();
