@@ -192,10 +192,12 @@ function init() {
       displayPopularMovies();
       break;
 
+    case '/flixx-app/shows.html':
     case '/shows.html':
       displayPopularShows();
       break;
-
+    
+    case '/flixx-app/movie-details.html?id=615656':
     case '/movie-details.html':
       displayMovieDetails();
       break;
