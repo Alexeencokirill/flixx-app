@@ -2,7 +2,7 @@ const global = {
   currentPage: window.location.pathname,
 };
 
-console.log(global)
+console.log(global.currentPage)
 
 async function displayPopularMovies () {
     const {results} = await fetchAPIData('movie/popular');
@@ -63,7 +63,7 @@ function highlightActiveLink () {
 // Init App
 function init() {
   switch (global.currentPage) {
-    case '/':
+    case '/flixx-app/':
     case '/index.html':
         console.log('Home')
       displayPopularMovies();
