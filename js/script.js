@@ -1,5 +1,11 @@
 const global = {
   currentPage: window.location.pathname,
+  serch: {
+    term: '',
+    type: '',
+    page: 1,
+    totalPages: 1
+  }
 };
 
 console.log(global.currentPage);
@@ -236,7 +242,18 @@ function displayBackgroundImage(type, backgroundPath) {
 // Search Movies/Shows
 async function search() {
   const queryString = window.location.search;
-  console.log(queryString)
+  const urlParams = new URLSearchParams(queryString);
+
+  global.serch.type = urlParams.get('type');
+  global.serch.term = urlParams.get('search-term');
+
+  if (global.serch.term !== '' && global.serch.term !== null) {
+    // todo - make request and splay results
+    const results = await searchAPIData();
+    console.log(results)
+  } else {
+    showAlert('Please enter a search term');
+  }
 }
 
 // Display Slider Movies
@@ -321,6 +338,16 @@ function highlightActiveLink() {
       link.classList.add('active');
     }
   });
+}
+
+// Show Alert
+function showAlert(message, className ) {
+  const alertEl = document.createElement('div');
+  alertEl.classList.add('alert', className);
+  alertEl.appendChild(document.createTextNode(message));
+  document.querySelector('#alert').appendChild(alertEl);
+
+  setTimeout(() => alertEl.remove(), 3000)
 }
 
 function addCommasToNumber(number) {
