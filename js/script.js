@@ -253,11 +253,24 @@ async function search() {
 
   if (global.search.term !== '' && global.search.term !== null) {
     // todo - make request and splay results
-    const results = await searchAPIData();
-    console.log(results)
+    const {results, total_pages, page} = await searchAPIData();
+    
+    if (results.length === 0) {
+      showAlert('No results found');
+      return;
+    } 
+
+    displaySearchResults(results);
+
+    document.querySelector('#search-term').value = '';
+
   } else {
     showAlert('Please enter a search term');
   }
+}
+
+function displaySearchResults(results) {
+  
 }
 
 // Display Slider Movies
@@ -363,7 +376,7 @@ function highlightActiveLink() {
 }
 
 // Show Alert
-function showAlert(message, className ) {
+function showAlert(message, className = 'error') {
   const alertEl = document.createElement('div');
   alertEl.classList.add('alert', className);
   alertEl.appendChild(document.createTextNode(message));
