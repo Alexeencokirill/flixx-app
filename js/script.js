@@ -9,8 +9,8 @@ const global = {
   },
   api: {
     apiKey: 'dd78409f06db432115dd9d4627cdcfdd',
-    apiUrl: 'https://api.themoviedb.org/3/'
-  }
+    apiUrl: 'https://api.themoviedb.org/3/',
+  },
 };
 
 console.log(global.currentPage);
@@ -49,8 +49,6 @@ async function displayPopularMovies() {
     document.querySelector('#popular-movies').appendChild(div);
   });
 }
-
-
 
 // Display 20 most popular tv shows
 async function displayPopularShows() {
@@ -147,16 +145,17 @@ async function displayMovieDetails() {
             <li><span class="text-secondary">Status:</span> ${movie.status}</li>
           </ul>
           <h4>Production Companies</h4>
-          <div class="list-group">${movie.production_companies.map(
-            (company) => `
+          <div class="list-group">${movie.production_companies
+            .map(
+              (company) => `
           <span>${company.name}</span>`
-          ).join(', ')}</div>
+            )
+            .join(', ')}</div>
         </div>
         `;
 
   document.querySelector('#movie-details').appendChild(div);
 }
-
 
 // Display Show Details
 async function displayShowDetails() {
@@ -192,8 +191,7 @@ async function displayShowDetails() {
               <i class="fas fa-star text-primary"></i>
               ${show.vote_average.toFixed(1)}/ 10
             </p>
-            <p class="text-muted">Last Air Date: ${show.first_air_date
-            }</p>
+            <p class="text-muted">Last Air Date: ${show.first_air_date}</p>
             <p>${show.overview}</p>
             <h5>Genres</h5>
             <ul class="list-group">${show.genres
@@ -207,15 +205,21 @@ async function displayShowDetails() {
         <div class="details-bottom">
           <h2>Movie Info</h2>
           <ul>
-            <li><span class="text-secondary">Number of Episodes: </span>${show.number_of_episodes}</li>
-            <li><span class="text-secondary">Last Episode To Air: </span>${show.last_episode_to_air.name}</li>
+            <li><span class="text-secondary">Number of Episodes: </span>${
+              show.number_of_episodes
+            }</li>
+            <li><span class="text-secondary">Last Episode To Air: </span>${
+              show.last_episode_to_air.name
+            }</li>
             <li><span class="text-secondary">Status:</span> ${show.status}</li>
           </ul>
           <h4>Production Companies</h4>
-          <div class="list-group">${show.production_companies.map(
-            (company) => `
+          <div class="list-group">${show.production_companies
+            .map(
+              (company) => `
           <span>${show.name}</span>`
-          ).join(', ')}</div>
+            )
+            .join(', ')}</div>
         </div>
         `;
 
@@ -254,27 +258,31 @@ async function search() {
 
   if (global.search.term !== '' && global.search.term !== null) {
     // todo - make request and splay results
-    const {results, total_pages, page, total_results} = await searchAPIData();
+    const { results, total_pages, page, total_results } = await searchAPIData();
 
     global.search.page = page;
     global.search.totalPages = total_pages;
     global.search.totalResults = total_results;
-    
+
     if (results.length === 0) {
       showAlert('No results found');
       return;
-    } 
+    }
 
     displaySearchResults(results);
 
     document.querySelector('#search-term').value = '';
-
   } else {
     showAlert('Please enter a search term');
   }
 }
 
 function displaySearchResults(results) {
+  // Clear previous results
+  document.querySelector('#search-results').innerHTML = '';
+  document.querySelector('#search-results-heading').innerHTML = '';
+  document.querySelector('#pagination').innerHTML = '';
+
   results.forEach((result) => {
     const div = document.createElement('div');
     div.classList.add('card');
@@ -285,33 +293,41 @@ function displaySearchResults(results) {
                 ? `<img
                 src="https://image.tmdb.org/t/p/w500/${result.poster_path}"
                 class="card-img-top"
-                alt="${global.search.type === 'movie' ? result.title : result.name}"
+                alt="${
+                  global.search.type === 'movie' ? result.title : result.name
+                }"
               />`
                 : `
               <img
               src="images/no-image.jpg"
               class="card-img-top"
-              alt="${global.search.type === 'movie' ? result.title : result.name}"
+              alt="${
+                global.search.type === 'movie' ? result.title : result.name
+              }"
             />`
             }
           </a>
           <div class="card-body">
-            <h5 class="card-title">${global.search.type === 'movie' ? result.title : result.name}</h5>
+            <h5 class="card-title">${
+              global.search.type === 'movie' ? result.title : result.name
+            }</h5>
             <p class="card-text">
-              <small class="text-muted">Release: ${global.search.type === 'movie' ? result.release_date : result.first_air_date}</small>
+              <small class="text-muted">Release: ${
+                global.search.type === 'movie'
+                  ? result.release_date
+                  : result.first_air_date
+              }</small>
             </p>
           </div>`;
 
     document.querySelector('#search-results-heading').innerHTML = `
             <h2>${results.length} of ${global.search.totalResults} Results of ${global.search.term}</h2>
     `;
-   
 
     document.querySelector('#search-results').appendChild(div);
   });
 
   displayPagination();
-
 }
 
 // Create and display pagination for search
@@ -324,7 +340,31 @@ function displayPagination() {
   <div class="page-counter">Page ${global.search.page} of ${global.search.totalPages}</div>
   `;
 
-  document.querySelector('#pagination').appendChild(div)
+  document.querySelector('#pagination').appendChild(div);
+
+  // Disable prev button if on first page
+  if (global.search.page === 1) {
+    document.querySelector('#prev').disabled = true;
+  }
+
+  // Disable next button if on last page
+  if (global.search.page === global.search.totalPages) {
+    document.querySelector('#next').disabled = true;
+  }
+
+  // Next page
+  document.querySelector('#next').addEventListener('click', async () => {
+    global.search.page++;
+    const { results, total_pages } = await searchAPIData();
+    displaySearchResults(results);
+  });
+
+  // Prev page
+  document.querySelector('#prev').addEventListener('click', async () => {
+    global.search.page--;
+    const { results, total_pages } = await searchAPIData();
+    displaySearchResults(results);
+  });
 }
 
 // Display Slider Movies
@@ -349,7 +389,6 @@ async function displaySlider() {
     initSwiper();
   });
 }
-
 
 function initSwiper() {
   const swiper = new Swiper('.swiper', {
@@ -401,7 +440,8 @@ async function searchAPIData() {
   showSpiner();
 
   const responce = await fetch(
-    `${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}`
+    `${API_URL}search/${global.search.type}?api_key=${API_KEY}&
+    language=en-US&query=${global.search.term}&page=${global.search.page}`
   );
 
   const data = await responce.json();
@@ -436,7 +476,7 @@ function showAlert(message, className = 'error') {
   alertEl.appendChild(document.createTextNode(message));
   document.querySelector('#alert').appendChild(alertEl);
 
-  setTimeout(() => alertEl.remove(), 3000)
+  setTimeout(() => alertEl.remove(), 3000);
 }
 
 function addCommasToNumber(number) {
@@ -453,10 +493,10 @@ function init() {
       break;
 
     case '/flixx-app/shows.html':
-    case '/shows.html': 
+    case '/shows.html':
       displayPopularShows();
       break;
-    
+
     case '/movie-details.html':
       displayMovieDetails();
       break;
