@@ -520,13 +520,11 @@ function addCommasToNumber(number) {
 
 function init() {
   const showId = window.location.search.split('=')[1]
-  // Проверяем, является ли текущая страница страницей "movie-details.html" или "tv-details.html"
   if (global.currentPage.endsWith('movie-details.html')) {
     displayMovieDetails(showId);
   } else if (global.currentPage.endsWith('tv-details.html')) {
     displayShowDetails();
   } else {
-    // Если это не страница "details", продолжаем с другой обработкой
     switch (global.currentPage) {
       case '/flixx-app/':
       case '/index.html':
@@ -534,6 +532,14 @@ function init() {
         displayPopularMovies();
         break;
 
+      case '/movie-details.html':
+        displayMovieDetails();
+        break;
+
+      case '/tv-details.html':
+         displayShowDetails();
+        break;
+      
       case '/flixx-app/shows.html':
       case '/shows.html':
         displayPopularShows();
