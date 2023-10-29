@@ -158,8 +158,9 @@ async function displayMovieDetails() {
 }
 
 // Display Show Details
-async function displayShowDetails() {
-  const showId = window.location.search.split('=')[1];
+async function displayShowDetails(showId) {
+    
+  // const showId = window.location.search.split('=')[1];
 
   const show = await fetchAPIData(`tv/${showId}`);
 
@@ -483,33 +484,68 @@ function addCommasToNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
+
+
 // Init App
+// function init() {
+// // console.log(window.location.search.split('=')[1]);
+
+
+//   switch (global.currentPage) {
+//     case '/flixx-app/':
+//     case '/index.html':
+//       displaySlider();
+//       displayPopularMovies();
+//       break;
+
+//     case '/flixx-app/shows.html':
+//     case '/shows.html':
+//       displayPopularShows();
+//       break;
+
+//     case '/movie-details.html':
+//       displayMovieDetails();
+//       break;
+
+//     case '/tv-details.html':
+//       displayShowDetails();
+//       break;
+
+//     case '/search.html':
+//       search();
+//       break;
+//   }
+//   highlightActiveLink();
+// }
+
 function init() {
-  switch (global.currentPage) {
-    case '/flixx-app/':
-    case '/index.html':
-      displaySlider();
-      displayPopularMovies();
-      break;
+  const showId = window.location.search.split('=')[1]
+  // Проверяем, является ли текущая страница страницей "movie-details.html" или "tv-details.html"
+  if (global.currentPage.endsWith('movie-details.html')) {
+    displayMovieDetails(showId);
+  } else if (global.currentPage.endsWith('tv-details.html')) {
+    displayShowDetails();
+  } else {
+    // Если это не страница "details", продолжаем с другой обработкой
+    switch (global.currentPage) {
+      case '/flixx-app/':
+      case '/index.html':
+        displaySlider();
+        displayPopularMovies();
+        break;
 
-    case '/flixx-app/shows.html':
-    case '/shows.html':
-      displayPopularShows();
-      break;
+      case '/flixx-app/shows.html':
+      case '/shows.html':
+        displayPopularShows();
+        break;
 
-    case '/movie-details.html':
-      displayMovieDetails();
-      break;
-
-    case '/tv-details.html':
-      displayShowDetails();
-      break;
-
-    case '/search.html':
-      search();
-      break;
+      case '/search.html':
+        search();
+        break;
+    }
   }
   highlightActiveLink();
 }
+
 
 document.addEventListener('DOMContentLoaded', init);
